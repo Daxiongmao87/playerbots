@@ -265,11 +265,11 @@ bool PlayerbotAIConfig::Initialize()
     randomBotLoginWithPlayer = config.GetBoolDefault("AiPlayerbot.RandomBotLoginWithPlayer", false);
     asyncBotLogin = config.GetBoolDefault("AiPlayerbot.AsyncBotLogin", false);
     preloadHolders = config.GetBoolDefault("AiPlayerbot.PreloadHolders", false);
-    
+
     freeRoomForNonSpareBots = config.GetIntDefault("AiPlayerbot.FreeRoomForNonSpareBots", 1);
 
     loginBotsNearPlayerRange = config.GetIntDefault("AiPlayerbot.LoginBotsNearPlayerRange", 1000);
-    
+
     LoadListString<std::vector<std::string> >(config.GetStringDefault("AiPlayerbot.DefaultLoginCriteria", "maxbots,spareroom,offline"), defaultLoginCriteria);
 
     std::vector<std::string> criteriaValues = configA->GetValues("AiPlayerbot.LoginCriteria");
@@ -291,7 +291,7 @@ bool PlayerbotAIConfig::Initialize()
         loginCriteria.push_back({ "logoff,classrace,level" });
         loginCriteria.push_back({ "logoff,classrace" });
     }
-    
+
 
     for (uint32 level = 1; level <= DEFAULT_MAX_LEVEL; ++level)
     {
@@ -635,13 +635,13 @@ bool PlayerbotAIConfig::Initialize()
     catch (const std::invalid_argument& e) {
         sLog.outError("Unable to parse LLMApiEndpoint url: %s", e.what());
     }
-    llmApiKey = config.GetStringDefault("AiPlayerbot.LLMApiKey", "");    
+    llmApiKey = config.GetStringDefault("AiPlayerbot.LLMApiKey", "");
     llmApiJson = config.GetStringDefault("AiPlayerbot.LLMApiJson", "{ \"max_length\": 100, \"prompt\": \"[<pre prompt>]<context> <prompt> <post prompt>\"}");
     llmContextLength = config.GetIntDefault("AiPlayerbot.LLMContextLength", 4096);
     llmGenerationTimeout = config.GetIntDefault("AiPlayerbot.LLMGenerationTimeout", 600);
     llmMaxSimultaniousGenerations = config.GetIntDefault("AiPlayerbot.LLMMaxSimultaniousGenerations", 100);
-        
-    
+
+
     llmPrePrompt = config.GetStringDefault("AiPlayerbot.LLMPrePrompt", "You are a roleplaying character in World of Warcraft: <expansion name>. Your name is <bot name>. The <other type> <other name> is speaking to you <channel name> and is an <other gender> <other race> <other class> of level <other level>. You are level <bot level> and play as a <bot gender> <bot race> <bot class> that is currently in <bot subzone> <bot zone>. Answer as a roleplaying character. Limit responses to 100 characters.");
 
     llmPreRpgPrompt = config.GetStringDefault("AiPlayerbot.LLMRpgPrompt", "In World of Warcraft: <expansion name> in <bot zone> <bot subzone> stands <bot type> <bot name> a level <bot level> <bot gender> <bot race> <bot class>."
@@ -668,7 +668,7 @@ bool PlayerbotAIConfig::Initialize()
     try {
         std::regex pattern(llmResponseStartPattern);
     }
-    catch (const std::regex_error& e) {        
+    catch (const std::regex_error& e) {
         sLog.outError("Regex error in %s: %s", llmResponseStartPattern.c_str(), e.what());
     }
 
@@ -718,7 +718,43 @@ bool PlayerbotAIConfig::Initialize()
 
     for (auto& channelName : blockedChannels)
         llmBlockedReplyChannels.insert(sourceName[channelName]);
-
+    llmPersonalityGenerationEnabled = config.GetBoolDefault("AiPlayerbot.LLMPersonalityGenerationEnabled", false);
+    llmPersonalityGenerationPrompt = config.GetStringDefault(
+        "AiPlayerbot.LLMPersonalityGenerationPrompt",
+        "Generate a personality for the following world of warcraft character:\n"
+        "Name: <bot name>\n"
+        "Gender: <bot gender>\n"
+        "Race: <bot race>\n"
+        "Class: <bot class>\n"
+        "Provide 3 to 5 sentences describing this personality.  Include the following traits:\n"
+        "1.  Personality type (e.g. extroverted, introverted, etc.)\n"
+        "2.  Alignment (e.g. lawful good, chaotic neutral, etc.)\n"
+        "3.  Motivations (e.g. what drives this character)\n"
+        "4.  Fears (e.g. what this character is afraid of)\n"
+        "5.  Relationships (e.g. how this character interacts with others)"
+    );
+    llmPersonalityGenerationSeedLength = config.GetIntDefault("AiPlayerbot.LLMPersonalityGenerationSeedLength", 3);
+    llmPersonalityGenerationSeedList = config.GetStringDefault("AiPlayerbot.LLMPersonalityGenerationSeedList",
+        "horde, alliance, azeroth, teldrassil, eastern kingdoms, glory, honor, enemy, friendship, guild, gold, molten core, "
+        "kalimdor, orgrimmar, stormwind, elwynn forest, dun morogh, durotar, thunder bluff, undercity, darkshore, wetlands, "
+        "barrens, ashenvale, warsong gulch, arathi basin, alterac valley, zul'gurub, blackwing lair, onyxia, stratholme, "
+        "scholomance, uldaman, zul'farrak, dire maul, scarlet monastery, blackrock mountain, blackrock depths, razorfen downs, "
+        "razorfen kraul, westfall, duskwood, redridge mountains, loch modan, tanaris, un'goro crater, silithus, plaguelands, "
+        "felwood, burning steppes, blasted lands, hinterlands, badlands, swamp of sorrows, azshara, winterspring, frostwolf clan, "
+        "warsong clan, argent dawn, cenarion circle, defias brotherhood, shadow council, twilight's hammer, black dragonflight, "
+        "bronze dragonflight, emerald dream, naga, satyr, murloc, troll, goblin, night elf, blood elf, orc, tauren, dwarf, gnome, "
+        "human, undead, scourge, lich king, kel'thuzad, arthas, uther, thrall, jaina, vol'jin, cairne, sylvanas, medivh, grommash, "
+        "kil'jaeden, sargeras, cenarius, azshara, ragnaros, nefarian, chromaggus, c'thun, dark portal, warlocks, paladins, shamans, "
+        "druids, priests, rogues, warriors, hunters, mages, warlocks, zeppelins, gryphons, wyverns, hearthstone, mana, rage, energy, "
+        "totems, moonwell, sunwell, fel, arcane, shadow, holy, frost, fire, nature, protection, fury, arms, assassination, demonology, "
+        "affliction, marksman, beast mastery, feral, restoration, enhancement, elemental, retribution, holy light, shadow magic, "
+        "soul shard, ironforge, silvermoon, dalaran, gurubashi, sandfury, frostmane, stormpike, ravenholdt, dark iron, wildhammer, "
+        "steamwheedle cartel, "
+        "brave, cunning, loyal, honorable, ambitious, ruthless, fierce, steadfast, vigilant, arrogant, prideful, disciplined, "
+        "resourceful, patient, vengeful, fearless, zealous, stalwart, selfless, determined, courageous, defiant, noble, compassionate, "
+        "wise, crafty, diplomatic, shrewd, manipulative, benevolent, wrathful, relentless, empathetic, resolute, stoic, cunning, "
+        "charismatic, suspicious, greedy, humble, altruistic, merciless, calculating, deceptive, treacherous, idealistic, pragmatic, "
+        "reckless, impulsive, protective, vindictive, reserved, obedient, rebellious, tenacious, loyal, opportunistic"
     //LLM END
 
     // Gear progression system

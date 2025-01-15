@@ -375,7 +375,7 @@ delayedPackets ChatReplyAction::LinesToPackets(const std::vector<std::string>& l
             }
 
             if (!sentence.substr(0, splitPos).empty())
-                LineToPacket(delayedPackets, useEmote ? emoteTemplate : packetTemplate, sentence.substr(0, splitPos), MsPerChar, debug);                
+                LineToPacket(delayedPackets, useEmote ? emoteTemplate : packetTemplate, sentence.substr(0, splitPos), MsPerChar, debug);
 
             sentence = sentence.substr(splitPos + 1);
         }
@@ -528,8 +528,44 @@ void ChatReplyAction::ChatReplyDo(Player* bot, uint32 type, uint32 guid1, uint32
 
                 std::string llmPromptCustom = AI_VALUE(std::string, "manual saved string::llmdefaultprompt");
 
+                // If llmPromptCustom is empty & personality generation is enabled, generate a new prompt
+                    if (llmPromptCustom.empty() && sPlayerbotAIConfig.llmPersonalityGenerationEnabled)
+                    {
+                        // 1) Get your configured personality prompt
+                        std::string prompt = sPlayerbotAIConfig.llmPersonalityGenerationPrompt;
+
+                        // 2) Append random seeds (if any)
+                        std::string randomSeeds = GetRandomSeeds(
+                            sPlayerbotAIConfig.llmPersonalityGenerationSeedList,
+                            sPlayerbotAIConfig.llmPersonalityGenerationSeedLength
+                        );
+
+                        if (!randomSeeds.empty())
+                        {
+                            prompt += "\nGeneration seeds: " + randomSeeds;
+                        }
+
+                        // 3) Call your existing LLM function
+                        std::vector<std::string> debugLines; // or fill with some debug info
+                        llmPromptCustom = sPlayerbotLLMInterface.Generate(
+                            prompt,
+                            sPlayerbotAIConfig.llmGenerationTimeout,
+                            sPlayerbotAIConfig.llmMaxSimultaniousGenerations,
+                            debugLines
+                        );
+
+                        if (llmPromptCustom.empty())
+                        {
+                            sLog.outError("BotLLM: Personality generation returned an empty string.");
+                        }
+                        else
+                        {
+                          // Write to the saved string
+                          context->GetValue<std::string>("manual saved string::llmdefaultprompt")->Set(llmPromptCustom);
+                        }
+                    }
                 std::map<std::string, std::string> jsonFill;
-                jsonFill["<pre prompt>"] = sPlayerbotAIConfig.llmPrePrompt + " " + llmPromptCustom;
+                jsonFill["<pre prompt>"] = sPlayerbotAIConfig.llmPrePrompt + "\n" + llmPromptCustom;
                 jsonFill["<prompt>"] = sPlayerbotAIConfig.llmPrompt;
                 jsonFill["<post prompt>"] = sPlayerbotAIConfig.llmPostPrompt;
 
@@ -1476,4 +1512,46 @@ std::string ChatReplyAction::GenerateReplyMessage(Player* bot, std::string incom
 bool ChatReplyAction::isUseful()
 {
     return !ai->HasStrategy("silent", BotState::BOT_STATE_NON_COMBAT);
+}
+
+// Helper function: randomly pick N seeds from comma-delimited list.
+static std::string GetRandomSeeds(const std::string& seedList, uint32 seedCount)
+{
+    // Split the comma-delimited list into a vector
+    std::vector<std::string> seeds;
+    {
+        std::istringstream iss(seedList);
+        std::string item;
+        while (std::getline(iss, item, ','))
+        {
+            // Trim leading/trailing spaces if necessary
+            if (!item.empty() && item[0] == ' ')
+                item.erase(0, 1);
+            if (!item.empty() && item[item.size() - 1] == ' ')
+                item.erase(item.size() - 1);
+            seeds.push_back(item);
+        }
+    }
+
+    // If no seeds or seedCount is zero, just return empty
+    if (seeds.empty() || seedCount == 0)
+        return {};
+
+    // Shuffle seeds randomly
+    static std::random_device rd;
+    static std::mt19937 g(rd());
+    std::shuffle(seeds.begin(), seeds.end(), g);
+
+    // Pick up to 'seedCount' seeds
+    if (seeds.size() > seedCount)
+        seeds.resize(seedCount);
+
+    // Join them in a comma-separated string
+    std::ostringstream oss;
+    for (size_t i = 0; i < seeds.size(); ++i)
+    {
+        if (i > 0) oss << ", ";
+        oss << seeds[i];
+    }
+    return oss.str();
 }

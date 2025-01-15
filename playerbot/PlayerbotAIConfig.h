@@ -38,7 +38,7 @@ enum class BotSelfBotLevel : uint32
     GM_ONLY = 1,
     ACTIVE_BY_COMMAND = 2,
     ALWAYS_ALLOWED = 3,
-    ACTIVE_BY_LOGIN = 4, 
+    ACTIVE_BY_LOGIN = 4,
     ALWAYS_ACTIVE = 5
 };
 
@@ -352,13 +352,17 @@ public:
     bool perfMonEnabled;
     bool bExplicitDbStoreSave = false;
 
-    //LM BEGIN
-    std::string llmApiEndpoint, llmApiKey, llmApiJson, llmPrePrompt, llmPreRpgPrompt, llmPrompt, llmPostPrompt, llmResponseStartPattern, llmResponseEndPattern, llmResponseDeletePattern, llmResponseSplitPattern;
-    uint32 llmEnabled, llmContextLength, llmBotToBotChatChance, llmGenerationTimeout, llmMaxSimultaniousGenerations, llmRpgAIChatChance;
-    bool llmGlobalContext;
+    //LLM BEGIN
+    std::string llmApiEndpoint, llmApiKey, llmApiJson, llmPrePrompt, llmPreRpgPrompt;
+    std::string llmPrompt, llmPostPrompt, llmResponseStartPattern, llmResponseEndPattern;
+    std::string llmResponseDeletePattern, llmResponseSplitPattern; llmPersonalityGenerationPrompt;
+    std::string llmPersonalityGenerationSeedList;
+    uint32 llmEnabled, llmContextLength, llmBotToBotChatChance, llmGenerationTimeout;
+    uint32 llmMaxSimultaniousGenerations, llmRpgAIChatChance, llmPersonalityGenerationSeedLength;
+    bool llmGlobalContext, llmPersonalityGenerationEnabled;
     ParsedUrl llmEndPointUrl;
     std::set<uint32> llmBlockedReplyChannels;
-    //LM END
+    //LLM END
 
     std::string GetValue(std::string name);
     void SetValue(std::string name, std::string value);
