@@ -523,7 +523,6 @@ void ChatReplyAction::ChatReplyDo(Player* bot, uint32 type, uint32 guid1, uint32
 
                 placeholders["<channel name>"] = sourceName[chatChannelSource];
 
-
                 placeholders["<initial message>"] = msg;
 
                 std::string llmPromptCustom = AI_VALUE(std::string, "manual saved string::llmdefaultprompt");
@@ -531,10 +530,8 @@ void ChatReplyAction::ChatReplyDo(Player* bot, uint32 type, uint32 guid1, uint32
                 // If llmPromptCustom is empty & personality generation is enabled, generate a new prompt
                     if (llmPromptCustom.empty() && sPlayerbotAIConfig.llmPersonalityGenerationEnabled)
                     {
-                        // 1) Get your configured personality prompt
                         std::string prompt = sPlayerbotAIConfig.llmPersonalityGenerationPrompt;
 
-                        // 2) Append random seeds (if any)
                         std::string randomSeeds = GetRandomSeeds(
                             sPlayerbotAIConfig.llmPersonalityGenerationSeedList,
                             sPlayerbotAIConfig.llmPersonalityGenerationSeedLength
@@ -545,7 +542,11 @@ void ChatReplyAction::ChatReplyDo(Player* bot, uint32 type, uint32 guid1, uint32
                             prompt += "\nGeneration seeds: " + randomSeeds;
                         }
 
-                        // 3) Call your existing LLM function
+                        for (auto& placeholder : placeholders)
+                        {
+                            prompt = boost::replace_all_copy(prompt, placeholder.first, placeholder.second);
+                        }
+
                         std::vector<std::string> debugLines; // or fill with some debug info
                         llmPromptCustom = sPlayerbotLLMInterface.Generate(
                             prompt,
