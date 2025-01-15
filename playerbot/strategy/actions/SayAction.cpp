@@ -22,6 +22,48 @@ std::unordered_set<std::string> noReplyMsgParts = { "+", "-","@" , "follow targe
 
 std::unordered_set<std::string> noReplyMsgStarts = { "e ", "accept ", "cast ", "destroy " };
 
+// Helper function: randomly pick N seeds from comma-delimited list.
+static std::string GetRandomSeeds(const std::string& seedList, uint32 seedCount)
+{
+    // Split the comma-delimited list into a vector
+    std::vector<std::string> seeds;
+    {
+        std::istringstream iss(seedList);
+        std::string item;
+        while (std::getline(iss, item, ','))
+        {
+            // Trim leading/trailing spaces if necessary
+            if (!item.empty() && item[0] == ' ')
+                item.erase(0, 1);
+            if (!item.empty() && item[item.size() - 1] == ' ')
+                item.erase(item.size() - 1);
+            seeds.push_back(item);
+        }
+    }
+
+    // If no seeds or seedCount is zero, just return empty
+    if (seeds.empty() || seedCount == 0)
+        return {};
+
+    // Shuffle seeds randomly
+    static std::random_device rd;
+    static std::mt19937 g(rd());
+    std::shuffle(seeds.begin(), seeds.end(), g);
+
+    // Pick up to 'seedCount' seeds
+    if (seeds.size() > seedCount)
+        seeds.resize(seedCount);
+
+    // Join them in a comma-separated string
+    std::ostringstream oss;
+    for (size_t i = 0; i < seeds.size(); ++i)
+    {
+        if (i > 0) oss << ", ";
+        oss << seeds[i];
+    }
+    return oss.str();
+}
+
 SayAction::SayAction(PlayerbotAI* ai) : Action(ai, "say"), Qualified()
 {
 }
@@ -110,7 +152,6 @@ bool SayAction::Execute(Event& event)
 
     return true;
 }
-
 
 bool SayAction::isUseful()
 {
@@ -217,7 +258,6 @@ void ChatReplyAction::GetAIChatPlaceholders(std::map<std::string, std::string>& 
 
         std::string gossipText = placeholders["<" + preFix + " gossip>"];
 
-
         GossipMenusMapBounds pMenuBounds = sObjectMgr.GetGossipMenusMapBounds(creature->GetDefaultGossipMenuId());
         GossipMenuItemsMapBounds pMenuItemBounds = sObjectMgr.GetGossipMenuItemsMapBounds(creature->GetDefaultGossipMenuId());
 
@@ -306,7 +346,6 @@ WorldPacket ChatReplyAction::GetPacketTemplate(Opcodes op, uint32 type, Unit* se
         if (!channelName.empty())
             packetTemplate << channelName;
     }
-
 
     if (op != CMSG_MESSAGECHAT)
     {
@@ -1514,44 +1553,3 @@ bool ChatReplyAction::isUseful()
     return !ai->HasStrategy("silent", BotState::BOT_STATE_NON_COMBAT);
 }
 
-// Helper function: randomly pick N seeds from comma-delimited list.
-static std::string GetRandomSeeds(const std::string& seedList, uint32 seedCount)
-{
-    // Split the comma-delimited list into a vector
-    std::vector<std::string> seeds;
-    {
-        std::istringstream iss(seedList);
-        std::string item;
-        while (std::getline(iss, item, ','))
-        {
-            // Trim leading/trailing spaces if necessary
-            if (!item.empty() && item[0] == ' ')
-                item.erase(0, 1);
-            if (!item.empty() && item[item.size() - 1] == ' ')
-                item.erase(item.size() - 1);
-            seeds.push_back(item);
-        }
-    }
-
-    // If no seeds or seedCount is zero, just return empty
-    if (seeds.empty() || seedCount == 0)
-        return {};
-
-    // Shuffle seeds randomly
-    static std::random_device rd;
-    static std::mt19937 g(rd());
-    std::shuffle(seeds.begin(), seeds.end(), g);
-
-    // Pick up to 'seedCount' seeds
-    if (seeds.size() > seedCount)
-        seeds.resize(seedCount);
-
-    // Join them in a comma-separated string
-    std::ostringstream oss;
-    for (size_t i = 0; i < seeds.size(); ++i)
-    {
-        if (i > 0) oss << ", ";
-        oss << seeds[i];
-    }
-    return oss.str();
-}
