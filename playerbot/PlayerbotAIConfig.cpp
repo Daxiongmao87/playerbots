@@ -755,6 +755,7 @@ bool PlayerbotAIConfig::Initialize()
         "wise, crafty, diplomatic, shrewd, manipulative, benevolent, wrathful, relentless, empathetic, resolute, stoic, cunning, "
         "charismatic, suspicious, greedy, humble, altruistic, merciless, calculating, deceptive, treacherous, idealistic, pragmatic, "
         "reckless, impulsive, protective, vindictive, reserved, obedient, rebellious, tenacious, loyal, opportunistic"
+    );
     //LLM END
 
     // Gear progression system
