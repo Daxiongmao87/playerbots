@@ -561,8 +561,7 @@ void ChatReplyAction::ChatReplyDo(Player* bot, uint32 type, uint32 guid1, uint32
                         }
                         else
                         {
-                          // Write to the saved string
-                          context->GetValue<std::string>("manual saved string::llmdefaultprompt")->Set(llmPromptCustom);
+                          SET_AI_VALUE(std::string, "manual saved string::llmdefaultprompt", llmPromptCustom);
                         }
                     }
                 std::map<std::string, std::string> jsonFill;
