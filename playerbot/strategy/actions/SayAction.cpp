@@ -564,7 +564,7 @@ void ChatReplyAction::ChatReplyDo(Player* bot, uint32 type, uint32 guid1, uint32
 
                 placeholders["<initial message>"] = msg;
 
-                auto results = CharacterDatabase.PQuery("SELECT `personality` FROM `ai_playerbot_llm_personality` WHERE `guid` = '%u'", bot->GetObjectGuid().GetCounter());
+                auto results = CharacterDatabase.PQuery("SELECT `personality` FROM `ai_playerbot_llm_personalities` WHERE `guid` = '%u'", bot->GetObjectGuid().GetCounter());
                 std::string llmPromptCustom;
                 if (results)
                 {
@@ -608,7 +608,7 @@ void ChatReplyAction::ChatReplyDo(Player* bot, uint32 type, uint32 guid1, uint32
                     }
                     else
                     {
-                      CharacterDatabase.PExecute("INSERT INTO `ai_playerbot_llm_personality` (`guid`, `personality`) VALUES ('%u', '%s') ON DUPLICATE KEY UPDATE `personality` = '%s'", bot->GetObjectGuid().GetCounter(), llmPromptCustom.c_str(), llmPromptCustom.c_str());
+                      CharacterDatabase.PExecute("INSERT INTO `ai_playerbot_llm_personalities` (`guid`, `personality`) VALUES ('%u', '%s') ON DUPLICATE KEY UPDATE `personality` = '%s'", bot->GetObjectGuid().GetCounter(), llmPromptCustom.c_str(), llmPromptCustom.c_str());
                       sLog.outString("BotLLM: Generated personality for bot %s: %s", bot->GetName(), llmPromptCustom.c_str());
                     }
                 }
