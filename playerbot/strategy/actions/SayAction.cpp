@@ -565,12 +565,13 @@ void ChatReplyAction::ChatReplyDo(Player* bot, uint32 type, uint32 guid1, uint32
                 placeholders["<initial message>"] = msg;
 
                 auto results = CharacterDatabase.PQuery("SELECT `personality` FROM `ai_playerbot_llm_personality` WHERE `guid` = '%u'", bot->GetObjectGuid().GetCounter());
+                std::string llmPromptCustom;
                 if (results)
                 {
-                  std::string llmPromptCustom = results=>Fetch()[0].GetString();
+                  llmPromptCustom = results->Fetch()[0].GetString();
                 }
                 else {
-                  std::string llmPromptCustom = "";
+                  llmPromptCustom = "";
                 }
 
                 // If llmPromptCustom is empty & personality generation is enabled, generate a new prompt
