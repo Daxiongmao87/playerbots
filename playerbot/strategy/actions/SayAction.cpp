@@ -595,12 +595,27 @@ void ChatReplyAction::ChatReplyDo(Player* bot, uint32 type, uint32 guid1, uint32
                     }
 
                     std::vector<std::string> debugLines; // or fill with some debug info
+                    /**  The following code is returns this error:
+
+                    {"detail": {"msg": "Error parsing input.", "type": "bad_input"}}
+
+
                     llmPromptCustom = sPlayerbotLLMInterface.Generate(
                         prompt,
                         sPlayerbotAIConfig.llmGenerationTimeout,
                         sPlayerbotAIConfig.llmMaxSimultaniousGenerations,
                         debugLines
                     );
+
+                    Example of a valid function call is:
+
+                    std::string response = PlayerbotLLMInterface::Generate(json, sPlayerbotAIConfig.llmGenerationTimeout, sPlayerbotAIConfig.llmMaxSimultaniousGenerations, debugLines);
+
+                    The fix:
+
+
+                    **/
+                    std::string response = PlayerbotLLMInterface::Generate(prompt, sPlayerbotAIConfig.llmGenerationTimeout, sPlayerbotAIConfig.llmMaxSimultaniousGenerations, debugLines);
 
                     if (llmPromptCustom.empty())
                     {
