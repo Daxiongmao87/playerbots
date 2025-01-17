@@ -576,7 +576,12 @@ void ChatReplyAction::ChatReplyDo(Player* bot, uint32 type, uint32 guid1, uint32
                         std::map<std::string, std::string> jsonFill;
                         sLog.outString("BotLLM: Generating personality for bot %s", bot->GetName());
                         //std::string prompt = sPlayerbotAIConfig.llmPersonalityGenerationPrompt;
-                        jsonFill["<pre prompt>"] = sPlayerbotAIConfig.llmPrePrompt;
+                        std::string prePrompt = sPlayerbotAIConfig.llmPrePrompt;
+                        for (auto& placeholder : placeholders)
+                        {
+                            prePrompt = boost::replace_all_copy(prePrompt, placeholder.first, placeholder.second);
+                        }
+                        jsonFill["<pre prompt>"] = prePrompt;
                         std::string randomSeeds = GetRandomSeeds(
                             sPlayerbotAIConfig.llmPersonalityGenerationSeedList,
                             sPlayerbotAIConfig.llmPersonalityGenerationSeedLength
@@ -590,10 +595,6 @@ void ChatReplyAction::ChatReplyDo(Player* bot, uint32 type, uint32 guid1, uint32
                         prompt += "Return only the generated personality. At the end of the personality output, include |DONE|";
                         jsonFill["<prompt>"] = prompt;
                         jsonFill["<post prompt>"] = "|DONE|";
-                        for (auto& placeholder : placeholders)
-                        {
-                            prompt = boost::replace_all_copy(jsonFill, placeholder.first, placeholder.second);
-                        }
 
                         std::vector<std::string> debugLines; // or fill with some debug info
                         sLog.outString("DEBUG::: BotLLM: Generation ALL info: %s", jsonFill);
