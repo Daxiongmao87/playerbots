@@ -568,63 +568,61 @@ void ChatReplyAction::ChatReplyDo(Player* bot, uint32 type, uint32 guid1, uint32
                 std::string llmPromptCustom;
                 if (results)
                 {
-                  llmPromptCustom = results->Fetch()[0].GetString();
+                    llmPromptCustom = results->Fetch()[0].GetString();
                 }
                 else {
-                  llmPromptCustom = "";
-                }
-
-                // If llmPromptCustom is empty & personality generation is enabled, generate a new prompt
-                if (llmPromptCustom.empty() && sPlayerbotAIConfig.llmPersonalityGenerationEnabled)
-                {
-                    std::string prompt = sPlayerbotAIConfig.llmPersonalityGenerationPrompt;
-
-                    std::string randomSeeds = GetRandomSeeds(
-                        sPlayerbotAIConfig.llmPersonalityGenerationSeedList,
-                        sPlayerbotAIConfig.llmPersonalityGenerationSeedLength
-                    );
-
-                    if (!randomSeeds.empty())
+                    if (sPlayerbotAIConfig.llmPersonalityGenerationEnabled)
                     {
-                        prompt += "\nGeneration seeds: " + randomSeeds;
-                    }
+                        sLog.outString("BotLLM: Generating personality for bot %s", bot->GetName());
+                        std::string prompt = sPlayerbotAIConfig.llmPersonalityGenerationPrompt;
 
-                    for (auto& placeholder : placeholders)
-                    {
-                        prompt = boost::replace_all_copy(prompt, placeholder.first, placeholder.second);
-                    }
+                        std::string randomSeeds = GetRandomSeeds(
+                            sPlayerbotAIConfig.llmPersonalityGenerationSeedList,
+                            sPlayerbotAIConfig.llmPersonalityGenerationSeedLength
+                        );
 
-                    std::vector<std::string> debugLines; // or fill with some debug info
-                    /**  The following code is returns this error:
+                        if (!randomSeeds.empty())
+                        {
+                            prompt += "\nGeneration seeds: " + randomSeeds;
+                        }
 
-                    {"detail": {"msg": "Error parsing input.", "type": "bad_input"}}
+                        for (auto& placeholder : placeholders)
+                        {
+                            prompt = boost::replace_all_copy(prompt, placeholder.first, placeholder.second);
+                        }
 
+                        std::vector<std::string> debugLines; // or fill with some debug info
+                        /**  The following code is returns this error:
 
-                    llmPromptCustom = sPlayerbotLLMInterface.Generate(
-                        prompt,
-                        sPlayerbotAIConfig.llmGenerationTimeout,
-                        sPlayerbotAIConfig.llmMaxSimultaniousGenerations,
-                        debugLines
-                    );
-
-                    Example of a valid function call is:
-
-                    std::string response = PlayerbotLLMInterface::Generate(json, sPlayerbotAIConfig.llmGenerationTimeout, sPlayerbotAIConfig.llmMaxSimultaniousGenerations, debugLines);
-
-                    The fix:
+                        {"detail": {"msg": "Error parsing input.", "type": "bad_input"}}
 
 
-                    **/
-                    std::string response = PlayerbotLLMInterface::Generate(prompt, sPlayerbotAIConfig.llmGenerationTimeout, sPlayerbotAIConfig.llmMaxSimultaniousGenerations, debugLines);
+                        llmPromptCustom = sPlayerbotLLMInterface.Generate(
+                            prompt,
+                            sPlayerbotAIConfig.llmGenerationTimeout,
+                            sPlayerbotAIConfig.llmMaxSimultaniousGenerations,
+                            debugLines
+                        );
 
-                    if (llmPromptCustom.empty())
-                    {
-                        sLog.outError("BotLLM: Personality generation returned an empty string.");
-                    }
-                    else
-                    {
-                      CharacterDatabase.PExecute("INSERT INTO `ai_playerbot_llm_personalities` (`guid`, `personality`) VALUES ('%u', '%s') ON DUPLICATE KEY UPDATE `personality` = '%s'", bot->GetObjectGuid().GetCounter(), llmPromptCustom.c_str(), llmPromptCustom.c_str());
-                      sLog.outString("BotLLM: Generated personality for bot %s: %s", bot->GetName(), llmPromptCustom.c_str());
+                        Example of a valid function call is:
+
+                        std::string response = PlayerbotLLMInterface::Generate(json, sPlayerbotAIConfig.llmGenerationTimeout, sPlayerbotAIConfig.llmMaxSimultaniousGenerations, debugLines);
+
+                        The fix:
+
+
+                        **/
+                        std::string response = PlayerbotLLMInterface::Generate(prompt, sPlayerbotAIConfig.llmGenerationTimeout, sPlayerbotAIConfig.llmMaxSimultaniousGenerations, debugLines);
+
+                        if (llmPromptCustom.empty())
+                        {
+                            sLog.outError("BotLLM: Personality generation returned an empty string.");
+                        }
+                        else
+                        {
+                          CharacterDatabase.PExecute("INSERT INTO `ai_playerbot_llm_personalities` (`guid`, `personality`) VALUES ('%u', '%s') ON DUPLICATE KEY UPDATE `personality` = '%s'", bot->GetObjectGuid().GetCounter(), llmPromptCustom.c_str(), llmPromptCustom.c_str());
+                          sLog.outString("BotLLM: Generated personality for bot %s: %s", bot->GetName(), llmPromptCustom.c_str());
+                        }
                     }
                 }
                 std::map<std::string, std::string> jsonFill;
