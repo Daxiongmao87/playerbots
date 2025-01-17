@@ -575,6 +575,7 @@ void ChatReplyAction::ChatReplyDo(Player* bot, uint32 type, uint32 guid1, uint32
                     {
                         sLog.outString("BotLLM: Generating personality for bot %s", bot->GetName());
                         std::string prompt = sPlayerbotAIConfig.llmPersonalityGenerationPrompt;
+                        prompt = PlayerbotLLMInterface::SanitizeForJson(prompt);
                         for (auto& placeholder : placeholders)
                         {
                             prompt = boost::replace_all_copy(prompt, placeholder.first, placeholder.second);
@@ -593,7 +594,6 @@ void ChatReplyAction::ChatReplyDo(Player* bot, uint32 type, uint32 guid1, uint32
                         std::vector<std::string> debugLines; // or fill with some debug info
 
                         std::string json = "{\"max_length\": 200, \"prompt\": \"" + prompt + "\"}";
-                        //print json
                         sLog.outString("BotLLM: JSON: %s", json.c_str());
                         std::string response = PlayerbotLLMInterface::Generate(
                             json,
@@ -609,6 +609,8 @@ void ChatReplyAction::ChatReplyDo(Player* bot, uint32 type, uint32 guid1, uint32
                         }
                         else
                         {
+                          // sanitize for SQL, sanitizeforjson should be good enough
+                          llmPromptCustom = PlayerbotLLMInterface::SanitizeForJson(llmPromptCustom);
                           CharacterDatabase.PExecute("INSERT INTO `ai_playerbot_llm_personalities` (`guid`, `personality`) VALUES ('%u', '%s') ON DUPLICATE KEY UPDATE `personality` = '%s'", bot->GetObjectGuid().GetCounter(), llmPromptCustom.c_str(), llmPromptCustom.c_str());
                           sLog.outString("BotLLM: Generated personality for bot %s: %s", bot->GetName(), llmPromptCustom.c_str());
                         }
