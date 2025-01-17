@@ -579,7 +579,7 @@ void ChatReplyAction::ChatReplyDo(Player* bot, uint32 type, uint32 guid1, uint32
                         std::string prompt;
                         for (auto& placeholder : placeholders)
                         {
-                            prompt = boost::replace_all_copy(prePrompt, placeholder.first, placeholder.second);
+                            prompt = boost::replace_all_copy(prompt, placeholder.first, placeholder.second);
                         }
                         std::string randomSeeds = GetRandomSeeds(
                             sPlayerbotAIConfig.llmPersonalityGenerationSeedList,
@@ -595,7 +595,8 @@ void ChatReplyAction::ChatReplyDo(Player* bot, uint32 type, uint32 guid1, uint32
                         std::vector<std::string> debugLines; // or fill with some debug info
 
                         std::string json = "{\"max_length\": 100, \"prompt\": \"" + prompt + "\"}";
-                        sLog.outString("DEBUG::: BotLLM: Generation ALL info: %s", json);
+                        //print json
+                        sLog.outString("BotLLM: JSON: %s", json.c_str());
                         std::string response = PlayerbotLLMInterface::Generate(
                             json,
                             sPlayerbotAIConfig.llmGenerationTimeout,
