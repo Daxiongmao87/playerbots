@@ -601,7 +601,8 @@ void ChatReplyAction::ChatReplyDo(Player* bot, uint32 type, uint32 guid1, uint32
                             sPlayerbotAIConfig.llmMaxSimultaniousGenerations,
                             debugLines
                         );
-
+                        sLog.outString("BotLLM: Response: %s", response.c_str());
+                        llmPromptCustom = response;
                         if (llmPromptCustom.empty())
                         {
                             sLog.outError("BotLLM: Personality generation returned an empty string.");
