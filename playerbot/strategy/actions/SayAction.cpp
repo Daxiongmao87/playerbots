@@ -602,7 +602,7 @@ void ChatReplyAction::ChatReplyDo(Player* bot, uint32 type, uint32 guid1, uint32
                             debugLines
                         );
                         sLog.outString("BotLLM: Response: %s", response.c_str());
-                        llmPromptCustom = response;
+                        llmPromptCustom = PlayerbotLLMInterface::ParseResponse(response, sPlayerbotAIConfig.llmResponseStartPattern, sPlayerbotAIConfig.llmResponseEndPattern, sPlayerbotAIConfig.llmResponseDeletePattern, sPlayerbotAIConfig.llmResponseSplitPattern, debugLines)[0];
                         if (llmPromptCustom.empty())
                         {
                             sLog.outError("BotLLM: Personality generation returned an empty string.");
