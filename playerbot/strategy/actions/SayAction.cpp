@@ -597,9 +597,10 @@ void ChatReplyAction::ChatReplyDo(Player* bot, uint32 type, uint32 guid1, uint32
                         jsonFill["<post prompt>"] = "|DONE|";
 
                         std::vector<std::string> debugLines; // or fill with some debug info
-                        sLog.outString("DEBUG::: BotLLM: Generation ALL info: %s", jsonFill);
+                        std::string json = PlayerbotTextMgr::GetReplacePlaceholders(sPlayerbotAIConfig.llmApiJson, jsonFill);
+                        sLog.outString("DEBUG::: BotLLM: Generation ALL info: %s", json);
                         std::string response = PlayerbotLLMInterface::Generate(
-                            jsonFill,
+                            json,
                             sPlayerbotAIConfig.llmGenerationTimeout,
                             sPlayerbotAIConfig.llmMaxSimultaniousGenerations,
                             debugLines
