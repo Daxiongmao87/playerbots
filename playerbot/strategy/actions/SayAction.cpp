@@ -602,13 +602,22 @@ void ChatReplyAction::ChatReplyDo(Player* bot, uint32 type, uint32 guid1, uint32
                             debugLines
                         );
                         sLog.outString("BotLLM: Response: %s", response.c_str());
-                        llmPromptCustom = PlayerbotLLMInterface::ParseResponse(response, sPlayerbotAIConfig.llmResponseStartPattern, sPlayerbotAIConfig.llmResponseEndPattern, sPlayerbotAIConfig.llmResponseDeletePattern, sPlayerbotAIConfig.llmResponseSplitPattern, debugLines)[0];
+                        // Parse response
+                        llmPromptCustomLines = PlayerbotLLMInterface::ParseResponse(response, sPlayerbotAIConfig.llmResponseStartPattern, sPlayerbotAIConfig.llmResponseEndPattern, sPlayerbotAIConfig.llmResponseDeletePattern, sPlayerbotAIConfig.llmResponseSplitPattern, debugLines);
+                        // Combine lines back into sequential sentences
+                        llmPromptCustom = "";
+                        for (auto& line : llmPromptCustomLines)
+                        {
+                            llmPromptCustom += line + " ";
+                        }
+
                         if (llmPromptCustom.empty())
                         {
                             sLog.outError("BotLLM: Personality generation returned an empty string.");
                         }
                         else
                         {
+                          llmPromptCustom = PlayerbotLLMInterface::SanitizeForJson(llmPromptCustom);
                           CharacterDatabase.PExecute("INSERT INTO `ai_playerbot_llm_personalities` (`guid`, `personality`) VALUES ('%u', '%s') ON DUPLICATE KEY UPDATE `personality` = '%s'", bot->GetObjectGuid().GetCounter(), llmPromptCustom.c_str(), llmPromptCustom.c_str());
                           sLog.outString("BotLLM: Generated personality for bot %s: %s", bot->GetName(), llmPromptCustom.c_str());
                         }
