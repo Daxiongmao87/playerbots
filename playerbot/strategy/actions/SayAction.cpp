@@ -609,8 +609,6 @@ void ChatReplyAction::ChatReplyDo(Player* bot, uint32 type, uint32 guid1, uint32
                         }
                         else
                         {
-                          // sanitize for SQL, sanitizeforjson should be good enough
-                          llmPromptCustom = PlayerbotLLMInterface::SanitizeForJson(llmPromptCustom);
                           CharacterDatabase.PExecute("INSERT INTO `ai_playerbot_llm_personalities` (`guid`, `personality`) VALUES ('%u', '%s') ON DUPLICATE KEY UPDATE `personality` = '%s'", bot->GetObjectGuid().GetCounter(), llmPromptCustom.c_str(), llmPromptCustom.c_str());
                           sLog.outString("BotLLM: Generated personality for bot %s: %s", bot->GetName(), llmPromptCustom.c_str());
                         }
