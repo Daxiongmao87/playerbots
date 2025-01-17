@@ -726,12 +726,10 @@ bool PlayerbotAIConfig::Initialize()
         "Gender: <bot gender>\\n"
         "Race: <bot race>\\n"
         "Class: <bot class>\\n"
-        "Provide 3 to 5 sentences describing this personality.  Include the following traits:\\n"
-        "1.  Personality type (e.g. extroverted, introverted, etc.)\\n"
-        "2.  Alignment (e.g. lawful good, chaotic neutral, etc.)\\n"
-        "3.  Motivations (e.g. what drives this character)\\n"
-        "4.  Fears (e.g. what this character is afraid of)\\n"
-        "5.  Relationships (e.g. how this character interacts with others)"
+        "Provide 5 to 8 sentences describing this personality.  Include the following traits: Accent details & description, Major flaw, "
+        "Homeland & cultural background, Race-specific traits, Faction allegiance & personal view on conflicts, Speaking mannerisms, "
+        "Core beliefs & values, Personal quirks & habits, Motivations & aspirations, Notable experiences & history, Reputation with other "
+        "races/factions, Everyday life & hobbies, and 1 or 2 diegetic instances that have shaped them."
     );
     llmPersonalityGenerationSeedLength = config.GetIntDefault("AiPlayerbot.LLMPersonalityGenerationSeedLength", 3);
     llmPersonalityGenerationSeedList = config.GetStringDefault("AiPlayerbot.LLMPersonalityGenerationSeedList",

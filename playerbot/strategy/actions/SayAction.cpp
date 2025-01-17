@@ -588,11 +588,11 @@ void ChatReplyAction::ChatReplyDo(Player* bot, uint32 type, uint32 guid1, uint32
                         {
                           prompt += "\\n\\nTreat these terms as random generation seeds:" + randomSeeds;
                         }
-                        prompt += "\\nReturn only the generated personality. Limit output to 100 tokens. Personality: ";
+                        prompt += "\\nReturn only the generated personality. Limit output to 200 tokens. Personality: ";
 
                         std::vector<std::string> debugLines; // or fill with some debug info
 
-                        std::string json = "{\"max_length\": 100, \"prompt\": \"" + prompt + "\"}";
+                        std::string json = "{\"max_length\": 200, \"prompt\": \"" + prompt + "\"}";
                         //print json
                         sLog.outString("BotLLM: JSON: %s", json.c_str());
                         std::string response = PlayerbotLLMInterface::Generate(
