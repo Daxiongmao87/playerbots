@@ -603,7 +603,7 @@ void ChatReplyAction::ChatReplyDo(Player* bot, uint32 type, uint32 guid1, uint32
                         );
                         sLog.outString("BotLLM: Response: %s", response.c_str());
                         // Parse response
-                        llmPromptCustomLines = PlayerbotLLMInterface::ParseResponse(response, sPlayerbotAIConfig.llmResponseStartPattern, sPlayerbotAIConfig.llmResponseEndPattern, sPlayerbotAIConfig.llmResponseDeletePattern, sPlayerbotAIConfig.llmResponseSplitPattern, debugLines);
+                        std::vector<std::string> llmPromptCustomLines = PlayerbotLLMInterface::ParseResponse(response, sPlayerbotAIConfig.llmResponseStartPattern, sPlayerbotAIConfig.llmResponseEndPattern, sPlayerbotAIConfig.llmResponseDeletePattern, sPlayerbotAIConfig.llmResponseSplitPattern, debugLines);
                         // Combine lines back into sequential sentences
                         llmPromptCustom = "";
                         for (auto& line : llmPromptCustomLines)
