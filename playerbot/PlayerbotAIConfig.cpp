@@ -721,16 +721,16 @@ bool PlayerbotAIConfig::Initialize()
     llmPersonalityGenerationEnabled = config.GetBoolDefault("AiPlayerbot.LLMPersonalityGenerationEnabled", false);
     llmPersonalityGenerationPrompt = config.GetStringDefault(
         "AiPlayerbot.LLMPersonalityGenerationPrompt",
-        "Generate a personality for the following world of warcraft character:\n"
-        "Name: <bot name>\n"
-        "Gender: <bot gender>\n"
-        "Race: <bot race>\n"
-        "Class: <bot class>\n"
-        "Provide 3 to 5 sentences describing this personality.  Include the following traits:\n"
-        "1.  Personality type (e.g. extroverted, introverted, etc.)\n"
-        "2.  Alignment (e.g. lawful good, chaotic neutral, etc.)\n"
-        "3.  Motivations (e.g. what drives this character)\n"
-        "4.  Fears (e.g. what this character is afraid of)\n"
+        "Generate a personality for the following world of warcraft character:\\n"
+        "Name: <bot name>\\n"
+        "Gender: <bot gender>\\n"
+        "Race: <bot race>\\n"
+        "Class: <bot class>\\n"
+        "Provide 3 to 5 sentences describing this personality.  Include the following traits:\\n"
+        "1.  Personality type (e.g. extroverted, introverted, etc.)\\n"
+        "2.  Alignment (e.g. lawful good, chaotic neutral, etc.)\\n"
+        "3.  Motivations (e.g. what drives this character)\\n"
+        "4.  Fears (e.g. what this character is afraid of)\\n"
         "5.  Relationships (e.g. how this character interacts with others)"
     );
     llmPersonalityGenerationSeedLength = config.GetIntDefault("AiPlayerbot.LLMPersonalityGenerationSeedLength", 3);
