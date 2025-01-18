@@ -582,9 +582,12 @@ void ChatReplyAction::ChatReplyDo(Player* bot, uint32 type, uint32 guid1, uint32
                             sPlayerbotAIConfig.llmPersonalityGenerationSeedLength
                         );
                         placeholders["<personality seed text>"] = randomSeeds;
-                        std::string apiJson = PlayerbotTextMgr::GetReplacePlaceholders(sPlayerbotAIConfig.llmPersonalityGenerationApiJson, placeholders);
-                        std::vector<std::string> debugLines; // or fill with some debug info
-
+                        std::string apiJson = sPlayerbotAIConfig.llmPersonalityGenerationApiJson;
+                        while (apiJson.find("<") != std::string::npos || apiJson.find(">") != std::string::npos)
+                        {
+                          apiJson = PlayerbotTextMgr::GetReplacePlaceholders(apiJson, placeholders);
+                        }
+                        std::vector<std::string> debugLines;
                         sLog.outString("BotLLM: JSON: %s", apiJson.c_str());
                         std::string response = PlayerbotLLMInterface::Generate(
                             apiJson,
