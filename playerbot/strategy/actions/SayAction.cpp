@@ -597,13 +597,12 @@ void ChatReplyAction::ChatReplyDo(Player* bot, uint32 type, uint32 guid1, uint32
                         );
                         sLog.outString("BotLLM: Response: %s", response.c_str());
                         std::vector<std::string> llmPromptToDatabaseLines = PlayerbotLLMInterface::ParseResponse(response, sPlayerbotAIConfig.llmResponseStartPattern, sPlayerbotAIConfig.llmResponseEndPattern, sPlayerbotAIConfig.llmResponseDeletePattern, sPlayerbotAIConfig.llmResponseSplitPattern, debugLines);
-                        llmPromptToDatabase = "";
+                        std::string llmPromptToDatabase = "";
                         for (auto& line : llmPromptToDatabaseLines)
                         {
                             llmPromptToDatabase += line + " ";
                         }
-                        //twice to capture escape operators as well
-                        std::string llmPromptToDatabase = PlayerbotLLMInterface::SanitizeForSql(llmPromptToDatabase);
+                        llmPromptToDatabase = PlayerbotLLMInterface::SanitizeForSql(llmPromptToDatabase);
                         if (llmPromptToDatabase.empty())
                         {
                             sLog.outError("BotLLM: Personality generation returned an empty string.");
