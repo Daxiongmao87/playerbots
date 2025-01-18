@@ -649,7 +649,7 @@ void ChatReplyAction::ChatReplyDo(Player* bot, uint32 type, uint32 guid1, uint32
                 std::string json = PlayerbotTextMgr::GetReplacePlaceholders(sPlayerbotAIConfig.llmApiJson, jsonFill);
 
                 json = PlayerbotTextMgr::GetReplacePlaceholders(json, placeholders);
-
+                sLog.outString("BotLLM: JSON: %s", json.c_str());
                 uint32 type = CHAT_MSG_WHISPER;
                 std::string channelName;
 
