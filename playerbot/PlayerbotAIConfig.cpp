@@ -718,6 +718,7 @@ bool PlayerbotAIConfig::Initialize()
 
     for (auto& channelName : blockedChannels)
         llmBlockedReplyChannels.insert(sourceName[channelName]);
+
     llmPersonalityGenerationEnabled = config.GetBoolDefault("AiPlayerbot.LLMPersonalityGenerationEnabled", false);
     llmPersonalityGenerationPrompt = config.GetStringDefault(
         "AiPlayerbot.LLMPersonalityGenerationPrompt",
@@ -735,11 +736,10 @@ bool PlayerbotAIConfig::Initialize()
         "AiPlayerbot.LLMPersonalityGenerationSeedPrompt",
         "Treat these terms as random generation seeds: <personality seed text>. Return only the generated personality."
     );
-    llmPersonalityGenerationGenerationApiJson = config.GetStringDefault(
-        "AiPlayerbot.LLMPersonalityGenerationGenerationApiJson",
+    llmPersonalityGenerationApiJson = config.GetStringDefault(
+        "AiPlayerbot.LLMPersonalityGenerationApiJson",
         "{ \"max_length\": 200, \"prompt\": \"<personality prompt>\\n<personality seed prompt>\\nLimit output to 200 tokens.\\n\\nPersonality:\"}"
     );
-
     llmPersonalityGenerationSeedLength = config.GetIntDefault("AiPlayerbot.LLMPersonalityGenerationSeedLength", 3);
     llmPersonalityGenerationSeedList = config.GetStringDefault("AiPlayerbot.LLMPersonalityGenerationSeedList",
         "horde, alliance, azeroth, teldrassil, eastern kingdoms, glory, honor, enemy, friendship, guild, gold, molten core, "
@@ -756,7 +756,7 @@ bool PlayerbotAIConfig::Initialize()
         "totems, moonwell, sunwell, fel, arcane, shadow, holy, frost, fire, nature, protection, fury, arms, assassination, demonology, "
         "affliction, marksman, beast mastery, feral, restoration, enhancement, elemental, retribution, holy light, shadow magic, "
         "soul shard, ironforge, silvermoon, dalaran, gurubashi, sandfury, frostmane, stormpike, ravenholdt, dark iron, wildhammer, "
-        "steamwheedle cartel, peasant, noble, royalty, arcane, magic"
+        "steamwheedle cartel, peasant, noble, royalty, arcane, magic, "
         "brave, cunning, loyal, honorable, ambitious, ruthless, fierce, steadfast, vigilant, arrogant, prideful, disciplined, "
         "resourceful, patient, vengeful, fearless, zealous, stalwart, selfless, determined, courageous, defiant, noble, compassionate, "
         "wise, crafty, diplomatic, shrewd, manipulative, benevolent, wrathful, relentless, empathetic, resolute, stoic, cunning, "

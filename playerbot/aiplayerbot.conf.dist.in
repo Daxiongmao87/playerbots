@@ -1008,7 +1008,7 @@ AiPlayerbot.PerfMonEnabled = 0
 # AiPlayerbot.LLMPersonalityGenerationSeedPrompt = Treat these terms as random generation seeds: <personality seed text>. Return only the generated personality.
 
 # Personality generation API endpoint. This is the endpoint that will be called to generate a personality for a bot.
-# AiPlayerbot.LLMPersonalityGenerationGenerationApiJson = { \max_length\: 200, \prompt\: \<personality prompt>\\n<personality seed prompt>\\nLimit output to 200 tokens.\\n\\nPersonality:\}
+# AiPlayerbot.LLMPersonalityGenerationApiJson = { \max_length\: 200, \prompt\: \<personality prompt>\\n<personality seed prompt>\\nLimit output to 200 tokens.\\n\\nPersonality:\}
 
 # Personality generation seed length. This is the length of the seed text (via number of words)  that will be used to generate a personality for a bot.
 # AiPlayerbot.LLMPersonalityGenerationSeedLength = 3
