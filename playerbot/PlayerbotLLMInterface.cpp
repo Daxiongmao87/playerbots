@@ -30,7 +30,6 @@ std::string PlayerbotLLMInterface::SanitizeForJson(const std::string& input) {
     std::string sanitized;
     for (char c : input) {
         switch (c) {
-        case '\'': sanitized += "\\\'"; break;
         case '\"': sanitized += "\\\""; break;
         case '\\': sanitized += "\\\\"; break;
         case '\b': sanitized += "\\b"; break;
