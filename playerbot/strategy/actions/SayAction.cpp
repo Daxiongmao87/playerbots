@@ -587,7 +587,7 @@ void ChatReplyAction::ChatReplyDo(Player* bot, uint32 type, uint32 guid1, uint32
 
                         sLog.outString("BotLLM: JSON: %s", apiJson.c_str());
                         std::string response = PlayerbotLLMInterface::Generate(
-                            json,
+                            apiJson,
                             sPlayerbotAIConfig.llmGenerationTimeout,
                             sPlayerbotAIConfig.llmMaxSimultaniousGenerations,
                             debugLines
