@@ -568,9 +568,7 @@ void ChatReplyAction::ChatReplyDo(Player* bot, uint32 type, uint32 guid1, uint32
                 std::string llmPromptCustom;
                 if (results)
                 {
-                    //twice to capture escape operators as well
-                    llmPromptCustom = PlayerbotLLMInterface::SanitizeForJson(results->Fetch()[0].GetString());
-                    llmPromptCustom = PlayerbotLLMInterface::SanitizeForJson(llmPromptCustom);
+                    llmPromptCustom = results->Fetch()[0].GetString();
                 }
                 else {
                     if (sPlayerbotAIConfig.llmPersonalityGenerationEnabled)
@@ -598,22 +596,22 @@ void ChatReplyAction::ChatReplyDo(Player* bot, uint32 type, uint32 guid1, uint32
                             debugLines
                         );
                         sLog.outString("BotLLM: Response: %s", response.c_str());
-                        std::vector<std::string> llmPromptCustomLines = PlayerbotLLMInterface::ParseResponse(response, sPlayerbotAIConfig.llmResponseStartPattern, sPlayerbotAIConfig.llmResponseEndPattern, sPlayerbotAIConfig.llmResponseDeletePattern, sPlayerbotAIConfig.llmResponseSplitPattern, debugLines);
-                        llmPromptCustom = "";
-                        for (auto& line : llmPromptCustomLines)
+                        std::vector<std::string> llmPromptToDatabaseLines = PlayerbotLLMInterface::ParseResponse(response, sPlayerbotAIConfig.llmResponseStartPattern, sPlayerbotAIConfig.llmResponseEndPattern, sPlayerbotAIConfig.llmResponseDeletePattern, sPlayerbotAIConfig.llmResponseSplitPattern, debugLines);
+                        llmPromptToDatabase = "";
+                        for (auto& line : llmPromptToDatabaseLines)
                         {
-                            llmPromptCustom += line + " ";
+                            llmPromptToDatabase += line + " ";
                         }
                         //twice to capture escape operators as well
-                        llmPromptCustom = PlayerbotLLMInterface::SanitizeForSql(llmPromptCustom);
-                        llmPromptCustom = PlayerbotLLMInterface::SanitizeForSql(llmPromptCustom);
-                        if (llmPromptCustom.empty())
+                        std::string llmPromptToDatabase = PlayerbotLLMInterface::SanitizeForSql(llmPromptToDatabase);
+                        if (llmPromptToDatabase.empty())
                         {
                             sLog.outError("BotLLM: Personality generation returned an empty string.");
                         }
                         else
                         {
-                          CharacterDatabase.PExecute("INSERT INTO `ai_playerbot_llm_personalities` (`guid`, `personality`) VALUES ('%u', '%s') ON DUPLICATE KEY UPDATE `personality` = '%s'", bot->GetObjectGuid().GetCounter(), llmPromptCustom.c_str(), llmPromptCustom.c_str());
+                          CharacterDatabase.PExecute("INSERT INTO `ai_playerbot_llm_personalities` (`guid`, `personality`) VALUES ('%u', '%s') ON DUPLICATE KEY UPDATE `personality` = '%s'", bot->GetObjectGuid().GetCounter(), llmPromptToDatabase.c_str(), llmPromptToDatabase.c_str());
+                          llmPromptCustom = llmPromptToDatabase;
                         }
                     }
                 }
