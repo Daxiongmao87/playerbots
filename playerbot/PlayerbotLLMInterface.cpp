@@ -32,11 +32,11 @@ std::string PlayerbotLLMInterface::SanitizeForJson(const std::string& input) {
         switch (c) {
         case '\"': sanitized += "\\\""; break;
         case '\\': sanitized += "\\\\"; break;
-        case '\b': sanitized += "\\b"; break; 
-        case '\f': sanitized += "\\f"; break; 
-        case '\n': sanitized += "\\n"; break; 
-        case '\r': sanitized += "\\r"; break; 
-        case '\t': sanitized += "\\t"; break; 
+        case '\b': sanitized += "\\b"; break;
+        case '\f': sanitized += "\\f"; break;
+        case '\n': sanitized += "\\n"; break;
+        case '\r': sanitized += "\\r"; break;
+        case '\t': sanitized += "\\t"; break;
         default:
             if (c < 0x20) {
                 char buffer[7];
@@ -44,7 +44,34 @@ std::string PlayerbotLLMInterface::SanitizeForJson(const std::string& input) {
                 sanitized += buffer;
             }
             else {
-                sanitized += c; 
+                sanitized += c;
+            }
+        }
+    }
+    return sanitized;
+}
+
+// Used for LLM responses which can be unpredictable
+std::string PlayerbotLLMInterface::SanitizeForSql(const std::string& input) {
+    std::string sanitized;
+    for (char c : input) {
+        switch (c) {
+        case '\'': sanitized += "\'"; break;
+        case '\"': sanitized += "\""; break;
+        case '\\': sanitized += "\\"; break;
+        case '\b': sanitized += "\b"; break;
+        case '\f': sanitized += "\f"; break;
+        case '\n': sanitized += "\n"; break;
+        case '\r': sanitized += "\r"; break;
+        case '\t': sanitized += "\t"; break;
+        default:
+            if (c < 0x20) {
+                char buffer[7];
+                snprintf(buffer, sizeof(buffer), "\\u%04x", c);
+                sanitized += buffer;
+            }
+            else {
+                sanitized += c;
             }
         }
     }
@@ -276,7 +303,7 @@ std::string PlayerbotLLMInterface::Generate(const std::string& prompt, int timeO
         if (debug)
             debugLines.push_back("Failed to send request");
         sLog.outError("BotLLM: Failed to send request");
-        
+
         if (parsedUrl.https)
         {
             SSL_free(ssl);
@@ -295,7 +322,7 @@ std::string PlayerbotLLMInterface::Generate(const std::string& prompt, int timeO
         debugLines.push_back("Read the response");
 
     int bytesRead;
-    
+
     std::string response = RecvWithTimeout(sock, timeOutSeconds, bytesRead);
 
 #ifdef _WIN32
@@ -367,7 +394,7 @@ inline std::vector<std::string> splitResponse(const std::string& response, const
     std::vector<std::string> result;
     std::regex pattern(splitPattern);
     std::smatch match;
-    
+
     std::sregex_iterator begin(response.begin(), response.end(), pattern);
     std::sregex_iterator end;
     for (auto it = begin; it != end; ++it) {
@@ -390,7 +417,7 @@ std::vector<std::string> PlayerbotLLMInterface::ParseResponse(const std::string&
 
     if (debug)
         debugLines.push_back("start pattern:" + startPattern);
-    
+
     actualResponse = extractAfterPattern(actualResponse, startPattern);
 
     PlayerbotTextMgr::ReplaceAll(actualResponse, R"(\")", "'");
@@ -418,7 +445,7 @@ std::vector<std::string> PlayerbotLLMInterface::ParseResponse(const std::string&
         debugLines.push_back("split pattern:" + splitPattern);
     }
 
-    std::vector<std::string> responses = splitResponse(actualResponse, splitPattern);   
+    std::vector<std::string> responses = splitResponse(actualResponse, splitPattern);
 
     if (debug)
         debugLines.insert(debugLines.end(), responses.begin(), responses.end());

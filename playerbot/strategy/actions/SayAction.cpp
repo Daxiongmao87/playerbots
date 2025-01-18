@@ -576,7 +576,7 @@ void ChatReplyAction::ChatReplyDo(Player* bot, uint32 type, uint32 guid1, uint32
                         placeholders["<personality seed prompt>"] = sPlayerbotAIConfig.llmPersonalityGenerationSeedPrompt;
                         placeholders["<personality prompt>"] = sPlayerbotAIConfig.llmPersonalityGenerationPrompt;
                         sLog.outString("BotLLM: Generating personality for bot %s", bot->GetName());
-                        prompt = PlayerbotLLMInterface::SanitizeForJsoa(prompt);
+                        std::string prompt = PlayerbotLLMInterface::SanitizeForJsoa(prompt);
                         std::string randomSeeds = GetRandomSeeds(
                             sPlayerbotAIConfig.llmPersonalityGenerationSeedList,
                             sPlayerbotAIConfig.llmPersonalityGenerationSeedLength
@@ -593,15 +593,13 @@ void ChatReplyAction::ChatReplyDo(Player* bot, uint32 type, uint32 guid1, uint32
                             debugLines
                         );
                         sLog.outString("BotLLM: Response: %s", response.c_str());
-                        // Parse response
                         std::vector<std::string> llmPromptCustomLines = PlayerbotLLMInterface::ParseResponse(response, sPlayerbotAIConfig.llmResponseStartPattern, sPlayerbotAIConfig.llmResponseEndPattern, sPlayerbotAIConfig.llmResponseDeletePattern, sPlayerbotAIConfig.llmResponseSplitPattern, debugLines);
-                        // Combine lines back into sequential sentences
                         llmPromptCustom = "";
                         for (auto& line : llmPromptCustomLines)
                         {
                             llmPromptCustom += line + " ";
                         }
-
+                        llmPromptCustom = PlayerbotLLMInterface::SanitizeForSql(llmPromptCustom);
                         if (llmPromptCustom.empty())
                         {
                             sLog.outError("BotLLM: Personality generation returned an empty string.");
@@ -610,7 +608,6 @@ void ChatReplyAction::ChatReplyDo(Player* bot, uint32 type, uint32 guid1, uint32
                         {
                           llmPromptCustom = PlayerbotLLMInterface::SanitizeForJson(llmPromptCustom);
                           CharacterDatabase.PExecute("INSERT INTO `ai_playerbot_llm_personalities` (`guid`, `personality`) VALUES ('%u', '%s') ON DUPLICATE KEY UPDATE `personality` = '%s'", bot->GetObjectGuid().GetCounter(), llmPromptCustom.c_str(), llmPromptCustom.c_str());
-                          sLog.outString("BotLLM: Generated personality for bot %s: %s", bot->GetName(), llmPromptCustom.c_str());
                         }
                     }
                 }
