@@ -568,8 +568,9 @@ void ChatReplyAction::ChatReplyDo(Player* bot, uint32 type, uint32 guid1, uint32
                 std::string llmPromptCustom;
                 if (results)
                 {
-                    llmPromptCustom = PlayerbotLLMInterface::SanitizeForSql(results->Fetch()[0].GetString());
-
+                    //twice to capture escape operators as well
+                    llmPromptCustom = PlayerbotLLMInterface::SanitizeForJson(results->Fetch()[0].GetString());
+                    llmPromptCustom = PlayerbotLLMInterface::SanitizeForJson(llmPromptCustom);
                 }
                 else {
                     if (sPlayerbotAIConfig.llmPersonalityGenerationEnabled)
@@ -603,6 +604,8 @@ void ChatReplyAction::ChatReplyDo(Player* bot, uint32 type, uint32 guid1, uint32
                         {
                             llmPromptCustom += line + " ";
                         }
+                        //twice to capture escape operators as well
+                        llmPromptCustom = PlayerbotLLMInterface::SanitizeForSql(llmPromptCustom);
                         llmPromptCustom = PlayerbotLLMInterface::SanitizeForSql(llmPromptCustom);
                         if (llmPromptCustom.empty())
                         {
