@@ -576,7 +576,7 @@ void ChatReplyAction::ChatReplyDo(Player* bot, uint32 type, uint32 guid1, uint32
                         placeholders["<personality seed prompt>"] = sPlayerbotAIConfig.llmPersonalityGenerationSeedPrompt;
                         placeholders["<personality prompt>"] = sPlayerbotAIConfig.llmPersonalityGenerationPrompt;
                         sLog.outString("BotLLM: Generating personality for bot %s", bot->GetName());
-                        std::string prompt = PlayerbotLLMInterface::SanitizeForJsoa(prompt);
+                        std::string prompt = PlayerbotLLMInterface::SanitizeForJson(prompt);
                         std::string randomSeeds = GetRandomSeeds(
                             sPlayerbotAIConfig.llmPersonalityGenerationSeedList,
                             sPlayerbotAIConfig.llmPersonalityGenerationSeedLength
