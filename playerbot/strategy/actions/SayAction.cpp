@@ -568,7 +568,8 @@ void ChatReplyAction::ChatReplyDo(Player* bot, uint32 type, uint32 guid1, uint32
                 std::string llmPromptCustom;
                 if (results)
                 {
-                    llmPromptCustom = results->Fetch()[0].GetString();
+                    llmPromptCustom = PlayerbotLLMInterface::SanitizeForSql(results->Fetch()[0].GetString());
+
                 }
                 else {
                     if (sPlayerbotAIConfig.llmPersonalityGenerationEnabled)
@@ -609,7 +610,6 @@ void ChatReplyAction::ChatReplyDo(Player* bot, uint32 type, uint32 guid1, uint32
                         }
                         else
                         {
-                          llmPromptCustom = PlayerbotLLMInterface::SanitizeForJson(llmPromptCustom);
                           CharacterDatabase.PExecute("INSERT INTO `ai_playerbot_llm_personalities` (`guid`, `personality`) VALUES ('%u', '%s') ON DUPLICATE KEY UPDATE `personality` = '%s'", bot->GetObjectGuid().GetCounter(), llmPromptCustom.c_str(), llmPromptCustom.c_str());
                         }
                     }
