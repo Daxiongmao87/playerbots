@@ -405,12 +405,6 @@ delayedPackets ChatReplyAction::LinesToPackets(const std::vector<std::string>& l
     for (auto& line : lines)
     {
         bool useEmote = !emoteTemplate.empty() && (line.find("*") == 0 || line.find("[") == 0);
-        if (useEmote)
-        {
-          line.erase(std::remove(line.begin(), line.end(), '*'), line.end());
-          line.erase(std::remove(line.begin(), line.end(), '['), line.end());
-          line.erase(std::remove(line.begin(), line.end(), ']'), line.end());
-        }
 
         std::string sentence = line;
         while (sentence.length() > 200) {
