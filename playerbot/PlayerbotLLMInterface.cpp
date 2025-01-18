@@ -30,6 +30,7 @@ std::string PlayerbotLLMInterface::SanitizeForJson(const std::string& input) {
     std::string sanitized;
     for (char c : input) {
         switch (c) {
+        case '\'': sanitized += "\\\'"; break;
         case '\"': sanitized += "\\\""; break;
         case '\\': sanitized += "\\\\"; break;
         case '\b': sanitized += "\\b"; break;
@@ -56,14 +57,14 @@ std::string PlayerbotLLMInterface::SanitizeForSql(const std::string& input) {
     std::string sanitized;
     for (char c : input) {
         switch (c) {
-        case '\'': sanitized += "\'"; break;
-        case '\"': sanitized += "\""; break;
-        case '\\': sanitized += "\\"; break;
-        case '\b': sanitized += "\b"; break;
-        case '\f': sanitized += "\f"; break;
-        case '\n': sanitized += "\n"; break;
-        case '\r': sanitized += "\r"; break;
-        case '\t': sanitized += "\t"; break;
+        case '\'': sanitized += "\\\'"; break;
+        case '\"': sanitized += "\\\""; break;
+        case '\\': sanitized += "\\\\"; break;
+        case '\b': sanitized += "\\b"; break;
+        case '\f': sanitized += "\\f"; break;
+        case '\n': sanitized += "\\n"; break;
+        case '\r': sanitized += "\\r"; break;
+        case '\t': sanitized += "\\t"; break;
         default:
             if (c < 0x20) {
                 char buffer[7];
