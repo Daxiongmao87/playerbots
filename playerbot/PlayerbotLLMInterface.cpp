@@ -299,6 +299,7 @@ std::string PlayerbotLLMInterface::Generate(const std::string& prompt, int timeO
     if (debug)
         debugLines.push_back("Send the request" + request.str());
 
+    sLog.outDetail("BotLLM: Send the request %s", request.str().c_str());
     bool write = parsedUrl.https ? (SSL_write(ssl, request.str().c_str(), request.str().size()) <= 0) : (send(sock, request.str().c_str(), request.str().size(), 0) < 0);
     if (write) {
         if (debug)
