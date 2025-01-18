@@ -573,28 +573,19 @@ void ChatReplyAction::ChatReplyDo(Player* bot, uint32 type, uint32 guid1, uint32
                 else {
                     if (sPlayerbotAIConfig.llmPersonalityGenerationEnabled)
                     {
+                        placeholders["<personality seed prompt>"] = sPlayerbotAIConfig.llmPersonalityGenerationSeedPrompt;
+                        placeholders["<personality prompt>"] = sPlayerbotAIConfig.llmPersonalityGenerationPrompt;
                         sLog.outString("BotLLM: Generating personality for bot %s", bot->GetName());
-                        std::string prompt = sPlayerbotAIConfig.llmPersonalityGenerationPrompt;
-                        prompt = PlayerbotLLMInterface::SanitizeForJson(prompt);
-                        for (auto& placeholder : placeholders)
-                        {
-                            prompt = boost::replace_all_copy(prompt, placeholder.first, placeholder.second);
-                        }
+                        prompt = PlayerbotLLMInterface::SanitizeForJsoa(prompt);
                         std::string randomSeeds = GetRandomSeeds(
                             sPlayerbotAIConfig.llmPersonalityGenerationSeedList,
                             sPlayerbotAIConfig.llmPersonalityGenerationSeedLength
                         );
-
-                        if (!randomSeeds.empty())
-                        {
-                          prompt += "\\n\\nTreat these terms as random generation seeds:" + randomSeeds;
-                        }
-                        prompt += "\\nReturn only the generated personality. Limit output to 200 tokens. Personality: ";
-
+                        placeholders["<personality seed text>"] = randomSeeds;
+                        std::string apiJson = PlayerbotTextMgr::GetReplacePlaceholders(sPlayerbotAIConfig.llmPersonalityGenerationApiJson, placeholders);
                         std::vector<std::string> debugLines; // or fill with some debug info
 
-                        std::string json = "{\"max_length\": 200, \"prompt\": \"" + prompt + "\"}";
-                        sLog.outString("BotLLM: JSON: %s", json.c_str());
+                        sLog.outString("BotLLM: JSON: %s", apiJson.c_str());
                         std::string response = PlayerbotLLMInterface::Generate(
                             json,
                             sPlayerbotAIConfig.llmGenerationTimeout,

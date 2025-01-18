@@ -731,6 +731,15 @@ bool PlayerbotAIConfig::Initialize()
         "Core beliefs & values, Personal quirks & habits, Motivations & aspirations, Notable experiences & history, Reputation with other "
         "races/factions, Everyday life & hobbies, and 1 or 2 diegetic instances that have shaped them."
     );
+    llmPersonalityGenerationSeedPrompt = config.GetStringDefault(
+        "AiPlayerbot.LLMPersonalityGenerationSeedPrompt",
+        "Treat these terms as random generation seeds: <personality seed text>. Return only the generated personality."
+    );
+    llmPersonalityGenerationGenerationApiJson = config.GetStringDefault(
+        "AiPlayerbot.LLMPersonalityGenerationGenerationApiJson",
+        "{ \"max_length\": 200, \"prompt\": \"<personality prompt>\\n<personality seed prompt>\\nLimit output to 200 tokens.\\n\\nPersonality:\"}"
+    );
+
     llmPersonalityGenerationSeedLength = config.GetIntDefault("AiPlayerbot.LLMPersonalityGenerationSeedLength", 3);
     llmPersonalityGenerationSeedList = config.GetStringDefault("AiPlayerbot.LLMPersonalityGenerationSeedList",
         "horde, alliance, azeroth, teldrassil, eastern kingdoms, glory, honor, enemy, friendship, guild, gold, molten core, "
@@ -747,12 +756,19 @@ bool PlayerbotAIConfig::Initialize()
         "totems, moonwell, sunwell, fel, arcane, shadow, holy, frost, fire, nature, protection, fury, arms, assassination, demonology, "
         "affliction, marksman, beast mastery, feral, restoration, enhancement, elemental, retribution, holy light, shadow magic, "
         "soul shard, ironforge, silvermoon, dalaran, gurubashi, sandfury, frostmane, stormpike, ravenholdt, dark iron, wildhammer, "
-        "steamwheedle cartel, "
+        "steamwheedle cartel, peasant, noble, royalty, arcane, magic"
         "brave, cunning, loyal, honorable, ambitious, ruthless, fierce, steadfast, vigilant, arrogant, prideful, disciplined, "
         "resourceful, patient, vengeful, fearless, zealous, stalwart, selfless, determined, courageous, defiant, noble, compassionate, "
         "wise, crafty, diplomatic, shrewd, manipulative, benevolent, wrathful, relentless, empathetic, resolute, stoic, cunning, "
         "charismatic, suspicious, greedy, humble, altruistic, merciless, calculating, deceptive, treacherous, idealistic, pragmatic, "
-        "reckless, impulsive, protective, vindictive, reserved, obedient, rebellious, tenacious, loyal, opportunistic"
+        "reckless, impulsive, protective, vindictive, reserved, obedient, rebellious, tenacious, loyal, opportunistic, evil, cruel, "
+        "opportunistic, cowardly, witty, sarcastic, humorous, serious, somber, melancholic, optimistic, pessimistic, cynical, kniving, "
+        "scheming, lazy, simpleton, foolish, simple-minded, obtuse, innocent, megalomaniac, paranoid, delusional, insane, mad, "
+        "unpredictable, unstable, volatile, dangerous, heartless, murderous, sadistic, masochistic, malevolent, benevolent, "
+        "corrupted, coerced, manipulated, fanatical, pious, lying, deceitful, sickly, loyal, backstabbing, two-faced, egomaniac, "
+        "narcissistic, self-absorbed, self-centered, self-righteous, lone wolf, team player, leader, follower, romantic, pragmatic, "
+        "idealist, realist, dreamer, visionary, clingy, independent, self-sufficient, incompetent, competent, argumentative, contradictory, "
+        "stubborn, adaptable, hopeless, hopeless romantic, promiscuous, savant, adventurous, cautious, reckless, impulsive"
     );
     //LLM END
 

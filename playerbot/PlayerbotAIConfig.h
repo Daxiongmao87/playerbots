@@ -356,7 +356,8 @@ public:
     std::string llmApiEndpoint, llmApiKey, llmApiJson, llmPrePrompt, llmPreRpgPrompt;
     std::string llmPrompt, llmPostPrompt, llmResponseStartPattern, llmResponseEndPattern;
     std::string llmResponseDeletePattern, llmResponseSplitPattern, llmPersonalityGenerationPrompt;
-    std::string llmPersonalityGenerationSeedList;
+    std::string llmPersonalityGenerationSeedList, llmPersonalityGenerationSeedPrompt;
+    std::string llmPersonalityGenerationApiJson;
     uint32 llmEnabled, llmContextLength, llmBotToBotChatChance, llmGenerationTimeout;
     uint32 llmMaxSimultaniousGenerations, llmRpgAIChatChance, llmPersonalityGenerationSeedLength;
     bool llmGlobalContext, llmPersonalityGenerationEnabled;

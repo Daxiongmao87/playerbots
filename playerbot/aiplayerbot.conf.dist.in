@@ -186,7 +186,7 @@ AiPlayerbot.ImmuneSpellIds = 19428
 AiPlayerbot.RandomBotQuestIds = 7848,3802,5505,6502,7761,9378
 
 # Randombots will invite players to groups/raids/guilds. (This can also be disabled by turning on DnD on your character)
-# AiPlayerbot.RandomBotInvitePlayer = 1 
+# AiPlayerbot.RandomBotInvitePlayer = 1
 
 # Randombots will invite nearby bots to groups/raids/guilds
 # AiPlayerbot.RandomBotGroupNearby = 1
@@ -361,7 +361,7 @@ AiPlayerbot.AutoLearnDroppedSpells = 0
 # So if you set human to 50 and warrior to 75, human mage to 65 and orc warrior to 55:
 # All humans except mage and warrior will have a 50% lower chance to be generated.
 # All non-orc warriors will have a 75% lower chance to be generated.
-# Human mages have a 65% lower chance to generate. 
+# Human mages have a 65% lower chance to generate.
 # Orc warriors have a 55% lower chance to generate.
 
 # Source https://web.archive.org/web/20050115034332/http://www.warcraftrealms.com/census.php
@@ -696,10 +696,10 @@ AiPlayerbot.PremadeSpecLink.11.9.60 = 0143503002551351--5005021
 # Applies a permanent buff to all bots.
 # WorldBuff.Faction.Class.MinLevel.MaxLevel,EventID = spellId
 # All bots:               Rallying Cry of the Dragonslayer for all bots
-# AiPlayerbot.WorldBuff = 22888 
+# AiPlayerbot.WorldBuff = 22888
 # All horde                 Warchief's Blessing for all horde
 # AiPlayerbot.WorldBuff.2 = 16609
-# All level 40 bots         Spirit of Zandalar     
+# All level 40 bots         Spirit of Zandalar
 # AiPlayerbot.WorldBuff.0.0.40 = 24425
 # All warlocks between lvl1 and 10 volatile-infection & wandering-plague
 # AiPlayerbot.WorldBuff.0.9.1.10 = 18149,3436
@@ -791,12 +791,12 @@ AiPlayerbot.FleeingEnabled = 1
 # Random bot default strategies (applied after defaults)
 #AiPlayerbot.RandomBotCombatStrategies = +dps,+dps assist,-threat
 #AiPlayerbot.RandomBotNonCombatStrategies = +grind,+loot,+rpg,+custom::say
-#AiPlayerbot.RandomBotReactStrategies = 
-#AiPlayerbot.RandomBotDeadStrategies = 
+#AiPlayerbot.RandomBotReactStrategies =
+#AiPlayerbot.RandomBotDeadStrategies =
 #AiPlayerbot.CombatStrategies = +custom::say
 #AiPlayerbot.NonCombatStrategies = +custom::say,+return,+delayed roll
-#AiPlayerbot.ReactStrategies = 
-#AiPlayerbot.DeadStrategies = 
+#AiPlayerbot.ReactStrategies =
+#AiPlayerbot.DeadStrategies =
 
 # Quest items to leave (do not destroy)
 #AiPlayerbot.RandomBotQuestItems = 6948,5175,5176,5177,5178,16309,12382,13704,11000
@@ -924,7 +924,7 @@ AiPlayerbot.PerfMonEnabled = 0
 # Self bot level. Values: 0 (disabled), 1 (Game masters only), 2 (Any player), 3 (Allow .bot always command for all players), 4 (Enabled on login), 4 (Enabled even when offline)
 # AiPlayerbot.SelfBotLevel = 1
 
-# Account/character names that are either, always online as bot (SelfBotLevel < 4) or prevented from being always online as bot (SelfBotLevel = 4) 
+# Account/character names that are either, always online as bot (SelfBotLevel < 4) or prevented from being always online as bot (SelfBotLevel = 4)
 # When AiPlayerbot.BotAutologin is set to 2 these characters only log in on player (on the same account) logs in.
 # AiPlayerbot.ToggleAlwaysOnlineAccounts =
 # AiPlayerbot.ToggleAlwaysOnlineChars =
@@ -932,7 +932,7 @@ AiPlayerbot.PerfMonEnabled = 0
 
 # Allowed log files. See SPP_MAP for more information
 # https://github.com/mostlikely4r/spp-map
-# AiPlayerbot.AllowedLogFiles = 
+# AiPlayerbot.AllowedLogFiles =
 
 # Filters certain actions from showing up in 'nc +debug' and 'nc +debug action'
 # AiPlayerbot.DebugFilter = add gathering loot,check values,emote,check mount state,jump
@@ -988,14 +988,33 @@ AiPlayerbot.PerfMonEnabled = 0
 # Should previous conversations from all channels be mixed?
 # AiPlayerbot.LLMGlobalContext = 0
 
-# The chance (0-100) bots will use ai chat to respond to other bots 
+# The chance (0-100) bots will use ai chat to respond to other bots
 # AiPlayerbot.LLMBotToBotChatChance = 0
 
 # The chance (0-100) bots will use ai chat talk to npcs during rpg
 # AiPlayerbot.LLMRpgAIChatChance = 100
 
 # Channels that bots are not allowed to use ai-chat to reply on. Channels: guild,world,general,trade,lfg,ldefence,wdefence,grecruitement,say,whisper,emote,temote,yell,party,raid
-# AiPlayerbot.LLMBlockedReplyChannels = 
+# AiPlayerbot.LLMBlockedReplyChannels =
+
+# LLM-based Personality Generation
+# Enable or disable the personality generation feature. true = enabled, false = disabled
+# AiPlayerbot.LLMPersonalityGenerationEnabled = false
+
+# Personality generation prompt. This is the prompt that will be sent to the LLM model to generate a personality for a bot.
+# AiPlayerbot.LLMPersonalityGenerationPrompt = Generate a personality for the following world of warcraft character:\\nName: <bot name>\\nGender: <bot gender>\\nRace: <bot race>\\nClass: <bot class>\\nProvide 5 to 8 sentences describing this personality.  Include the following traits: Accent details & description, Major flaw, Homeland & cultural background, Race-specific traits, Faction allegiance & personal view on conflicts, Speaking mannerisms, Core beliefs & values, Personal quirks & habits, Motivations & aspirations, Notable experiences & history, Reputation with other races/factions, Everyday life & hobbies, and 1 or 2 diegetic instances that have shaped them.
+
+# Personality generation seed prompt. This is the prompt that will be sent to the LLM model to generate a personality for a bot using random words to influence the generation.
+# AiPlayerbot.LLMPersonalityGenerationSeedPrompt = Treat these terms as random generation seeds: <personality seed text>. Return only the generated personality.
+
+# Personality generation API endpoint. This is the endpoint that will be called to generate a personality for a bot.
+# AiPlayerbot.LLMPersonalityGenerationGenerationApiJson = { \max_length\: 200, \prompt\: \<personality prompt>\\n<personality seed prompt>\\nLimit output to 200 tokens.\\n\\nPersonality:\}
+
+# Personality generation seed length. This is the length of the seed text (via number of words)  that will be used to generate a personality for a bot.
+# AiPlayerbot.LLMPersonalityGenerationSeedLength = 3
+
+# Personality generation seed list. This is the list of words that will be used to generate a personality for a bot.
+# AiPlayerbot.LLMPersonalityGenerationSeedList = horde, alliance, azeroth, teldrassil, eastern kingdoms, glory, honor, enemy, friendship, guild, gold, molten core, kalimdor, orgrimmar, stormwind, elwynn forest, dun morogh, durotar, thunder bluff, undercity, darkshore, wetlands, barrens, ashenvale, warsong gulch, arathi basin, alterac valley, zul'gurub, blackwing lair, onyxia, stratholme, scholomance, uldaman, zul'farrak, dire maul, scarlet monastery, blackrock mountain, blackrock depths, razorfen downs, razorfen kraul, westfall, duskwood, redridge mountains, loch modan, tanaris, un'goro crater, silithus, plaguelands, felwood, burning steppes, blasted lands, hinterlands, badlands, swamp of sorrows, azshara, winterspring, frostwolf clan, warsong clan, argent dawn, cenarion circle, defias brotherhood, shadow council, twilight's hammer, black dragonflight, bronze dragonflight, emerald dream, naga, satyr, murloc, troll, goblin, night elf, blood elf, orc, tauren, dwarf, gnome, human, undead, scourge, lich king, kel'thuzad, arthas, uther, thrall, jaina, vol'jin, cairne, sylvanas, medivh, grommash, kil'jaeden, sargeras, cenarius, azshara, ragnaros, nefarian, chromaggus, c'thun, dark portal, warlocks, paladins, shamans, druids, priests, rogues, warriors, hunters, mages, warlocks, zeppelins, gryphons, wyverns, hearthstone, mana, rage, energy, totems, moonwell, sunwell, fel, arcane, shadow, holy, frost, fire, nature, protection, fury, arms, assassination, demonology, affliction, marksman, beast mastery, feral, restoration, enhancement, elemental, retribution, holy light, shadow magic, soul shard, ironforge, silvermoon, dalaran, gurubashi, sandfury, frostmane, stormpike, ravenholdt, dark iron, wildhammer, steamwheedle cartel, peasant, noble, royalty, arcane, magic, brave, cunning, loyal, honorable, ambitious, ruthless, fierce, steadfast, vigilant, arrogant, prideful, disciplined, resourceful, patient, vengeful, fearless, zealous, stalwart, selfless, determined, courageous, defiant, noble, compassionate, wise, crafty, diplomatic, shrewd, manipulative, benevolent, wrathful, relentless, empathetic, resolute, stoic, cunning, charismatic, suspicious, greedy, humble, altruistic, merciless, calculating, deceptive, treacherous, idealistic, pragmatic, reckless, impulsive, protective, vindictive, reserved, obedient, rebellious, tenacious, loyal, opportunistic, evil, cruel, opportunistic, cowardly, witty, sarcastic, humorous, serious, somber, melancholic, optimistic, pessimistic, cynical, kniving, scheming, lazy, simpleton, foolish, simple-minded, obtuse, innocent, megalomaniac, paranoid, delusional, insane, mad, unpredictable, unstable, volatile, dangerous, heartless, murderous, sadistic, masochistic, malevolent, benevolent, corrupted, coerced, manipulated, fanatical, pious, lying, deceitful, sickly, loyal, backstabbing, two-faced, egomaniac, narcissistic, self-absorbed, self-centered, self-righteous, lone wolf, team player, leader, follower, romantic, pragmatic, idealist, realist, dreamer, visionary, clingy, independent, self-sufficient, incompetent, competent, argumentative, contradictory, stubborn, adaptable, hopeless, hopeless romantic, promiscuous, savant, adventurous, cautious, reckless, impulsive
 
 # OPEN-AI (chat completions) example:
 # AiPlayerbot.LLMApiEndpoint = http://IP/URL:PORT/v1/chat/completions
@@ -1010,7 +1029,7 @@ AiPlayerbot.PerfMonEnabled = 0
 # !!warning heavy db usage at start!!
 # AiPlayerbot.PreloadHolders = 0
 
-# The login criteria to apply when trying to log in/keep online bots. options: 
+# The login criteria to apply when trying to log in/keep online bots. options:
 # maxbots: Keep the total number of bots below the maxium (between max/min).
 # spareroom: Keep some spare room below the max to login better bots.
 # bg: Bots online inside battlegrounds should not log off.
@@ -1025,14 +1044,14 @@ AiPlayerbot.PerfMonEnabled = 0
 # map: Prefer bots on the same map of an online player.
 # group: Prefer bots in the same group as an online player.
 # guild: Prefer bots in the same guild as an online player.
-# 
+#
 # How it works: All bots are evaluated based on configurd criteria wether they should be online of offline.
 # The default criteria must all be true or the bot will be logged off and can not log in.
 # Each line works as an AND construction where all criteria must be met. Note they are alphabetically sorted so use 01,02 for more than 9 lines.
 # Example logoff,classrace,level,online means a bot needs to have room in available level and classrace brackets, be online and not be slated to log off.
 # The multiple lines work as an OR construction where the top lines are used first and as more bots are needed it moves down.
 # Example 1 = group, 2 = bg. First it tries to login all bots in player groups, then as more bots are needed it looks for bots that might be online inside battlegrounds.
-# 
+#
 # AiPlayerbot.DefaultLoginCriteria1 = maxbots,spareroom,offline
 # AiPlayerbot.LoginCriteria.1 = group
 # AiPlayerbot.LoginCriteria.2 = bg
@@ -1063,7 +1082,7 @@ AiPlayerbot.PerfMonEnabled = 0
 ##################################################################################
 
 # A system that upgrades the group/raid bots gear based on the player gear
-# If the player gets a good gear piece of it's current progresion level (calculated by gear ilvl) the bots will 
+# If the player gets a good gear piece of it's current progresion level (calculated by gear ilvl) the bots will
 # also get a equivalent gear piece for that progression level (when inviting a bot to the group/raid)
 
 # Config structure: AiPlayerbot.GearProgressionSystem.Level.Class.Spec.Slot
@@ -1647,7 +1666,7 @@ AiPlayerbot.GearProgressionSystem.0.11.2.18 = 5976	# Tabard
 AiPlayerbot.GearProgressionSystem.0.11.3.0 = 18698	# Head
 AiPlayerbot.GearProgressionSystem.0.11.3.1 = 18317	# Neck
 AiPlayerbot.GearProgressionSystem.0.11.3.2 = 15058	# Shoulder
-AiPlayerbot.GearProgressionSystem.0.11.3.3 = 0		# Shirt 
+AiPlayerbot.GearProgressionSystem.0.11.3.3 = 0		# Shirt
 AiPlayerbot.GearProgressionSystem.0.11.3.4 = 15064	# Chest
 AiPlayerbot.GearProgressionSystem.0.11.3.5 = 13118	# Waist
 AiPlayerbot.GearProgressionSystem.0.11.3.6 = 11821	# Legs
@@ -2267,7 +2286,7 @@ AiPlayerbot.GearProgressionSystem.1.11.2.18 = 5976	# Tabard
 AiPlayerbot.GearProgressionSystem.1.11.3.0 = 8345	# Head
 AiPlayerbot.GearProgressionSystem.1.11.3.1 = 22150	# Neck
 AiPlayerbot.GearProgressionSystem.1.11.3.2 = 12927	# Shoulder
-AiPlayerbot.GearProgressionSystem.1.11.3.3 = 0		# Shirt 
+AiPlayerbot.GearProgressionSystem.1.11.3.3 = 0		# Shirt
 AiPlayerbot.GearProgressionSystem.1.11.3.4 = 12757	# Chest
 AiPlayerbot.GearProgressionSystem.1.11.3.5 = 13252	# Waist
 AiPlayerbot.GearProgressionSystem.1.11.3.6 = 15062	# Legs
@@ -2887,7 +2906,7 @@ AiPlayerbot.GearProgressionSystem.2.11.2.18 = 5976	# Tabard
 AiPlayerbot.GearProgressionSystem.2.11.3.0 = 8345	# Head
 AiPlayerbot.GearProgressionSystem.2.11.3.1 = 18404	# Neck
 AiPlayerbot.GearProgressionSystem.2.11.3.2 = 12927	# Shoulder
-AiPlayerbot.GearProgressionSystem.2.11.3.3 = 0		# Shirt 
+AiPlayerbot.GearProgressionSystem.2.11.3.3 = 0		# Shirt
 AiPlayerbot.GearProgressionSystem.2.11.3.4 = 12757	# Chest
 AiPlayerbot.GearProgressionSystem.2.11.3.5 = 19163	# Waist
 AiPlayerbot.GearProgressionSystem.2.11.3.6 = 15062	# Legs
@@ -3507,7 +3526,7 @@ AiPlayerbot.GearProgressionSystem.3.11.2.18 = 5976	# Tabard
 AiPlayerbot.GearProgressionSystem.3.11.3.0 = 8345	# Head
 AiPlayerbot.GearProgressionSystem.3.11.3.1 = 19377	# Neck
 AiPlayerbot.GearProgressionSystem.3.11.3.2 = 19389	# Shoulder
-AiPlayerbot.GearProgressionSystem.3.11.3.3 = 0		# Shirt 
+AiPlayerbot.GearProgressionSystem.3.11.3.3 = 0		# Shirt
 AiPlayerbot.GearProgressionSystem.3.11.3.4 = 19405	# Chest
 AiPlayerbot.GearProgressionSystem.3.11.3.5 = 19163	# Waist
 AiPlayerbot.GearProgressionSystem.3.11.3.6 = 15062	# Legs
@@ -4127,7 +4146,7 @@ AiPlayerbot.GearProgressionSystem.4.11.2.18 = 5976	# Tabard
 AiPlayerbot.GearProgressionSystem.4.11.3.0 = 8345	# Head
 AiPlayerbot.GearProgressionSystem.4.11.3.1 = 19377	# Neck
 AiPlayerbot.GearProgressionSystem.4.11.3.2 = 21665	# Shoulder
-AiPlayerbot.GearProgressionSystem.4.11.3.3 = 0		# Shirt 
+AiPlayerbot.GearProgressionSystem.4.11.3.3 = 0		# Shirt
 AiPlayerbot.GearProgressionSystem.4.11.3.4 = 21680	# Chest
 AiPlayerbot.GearProgressionSystem.4.11.3.5 = 21675	# Waist
 AiPlayerbot.GearProgressionSystem.4.11.3.6 = 21356	# Legs
@@ -4747,7 +4766,7 @@ AiPlayerbot.GearProgressionSystem.5.11.2.18 = 5976	# Tabard
 AiPlayerbot.GearProgressionSystem.5.11.3.0 = 8345	# Head
 AiPlayerbot.GearProgressionSystem.5.11.3.1 = 23053	# Neck
 AiPlayerbot.GearProgressionSystem.5.11.3.2 = 21665	# Shoulder
-AiPlayerbot.GearProgressionSystem.5.11.3.3 = 0		# Shirt 
+AiPlayerbot.GearProgressionSystem.5.11.3.3 = 0		# Shirt
 AiPlayerbot.GearProgressionSystem.5.11.3.4 = 23226	# Chest
 AiPlayerbot.GearProgressionSystem.5.11.3.5 = 21675	# Waist
 AiPlayerbot.GearProgressionSystem.5.11.3.6 = 23071	# Legs
